@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080d20">
+<title>NEXORA — One World, One Future</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #080d20;
+  color: white;
+  text-align: center;
+}
+
+header {
+  padding: 24px 12px;
+  border-bottom: 1px solid #26365b;
+}
+
+.logo {
+  font-size: 35px;
+  font-weight: bold;
+  letter-spacing: 5px;
+  color: #69eaff;
+}
+
+header p {
+  color: #a8b8df;
+  font-size: 13px;
+}
+
+.hero {
+  padding: 35px 18px 20px;
+}
+
+h1 {
+  font-size: 35px;
+  line-height: 1.25;
+  margin-bottom: 12px;
+}
+
+.highlight {
+  color: #69eaff;
+}
+
+.description {
+  color: #b5c1df;
+  line-height: 1.7;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.earth {
+  font-size: 100px;
+  margin: 25px 0 10px;
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.card {
+  background: #111a35;
+  border: 1px solid #293b65;
+  border-radius: 18px;
+  padding: 20px;
+  margin: 20px auto;
+  width: 90%;
+  max-width: 500px;
+  text-align: left;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  color: #69eaff;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 13px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  border: 1px solid #35466e;
+  background: #080d20;
+  color: white;
+  font-size: 16px;
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 13px 18px;
+  background: #69eaff;
+  color: #071021;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+.secondary {
+  background: #25365c;
+  color: white;
+  margin-top: 8px;
+}
+
+.full {
+  width: 100%;
+}
+
+#messageList {
+  margin-top: 18px;
+}
+
+.message {
+  background: #172342;
+  border-left: 3px solid #69eaff;
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 12px;
+  overflow-wrap: anywhere;
+}
+
+.message strong {
+  color: #69eaff;
+}
+
+.message p {
+  line-height: 1.6;
+}
+
+footer {
+  padding: 25px 12px;
+  color: #8495bb;
+  font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">NEXORA</div>
+  <p>ONE WORLD. ONE VISION. ONE FUTURE.</p>
+</header>
+
+<section class="hero">
+  <h1>One World.<br><span class="highlight">One Human Family.</span></h1>
+
+  <p class="description">
+    A place where people can share hope, kindness and positive messages
+    with the world.
+  </p>
+
+  <div class="earth">🌍</div>
+
+  <p class="highlight">Every voice matters. Every message counts.</p>
+</section>
+
+<section class="card">
+  <h2>🌎 Share Your Message</h2>
+
+  <label for="name">Your name or nickname</label>
+  <input id="name" maxlength="35" placeholder="Enter your name">
+
+  <label for="message">Your message to the world</label>
+  <textarea id="message" maxlength="300"
+    placeholder="Write something positive for humanity..."></textarea>
+
+  <button class="full" onclick="addMessage()">
+    ✨ Add My Message
+  </button>
+
+  <button class="secondary full" onclick="shareNexora()">
+    📤 Share NEXORA
+  </button>
+
+  <p id="status" aria-live="polite"></p>
+</section>
+
+<section class="card">
+  <h2>💙 Messages of Humanity</h2>
+  <p style="color:#a8b8df">
+    Positive messages saved on this device
+  </p>
+  <div id="messageList"></div>
+</section>
+
+<footer>
+  NEXORA © 2026<br>
+  Built for a world connected by kindness.
+</footer>
+
+<script>
+const storageKey = "nexora_messages_v1";
+
+function getMessages() {
+  try {
+    const data = JSON.parse(localStorage.getItem(storageKey) || "[]");
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
+}
+
+function renderMessages() {
+  const list = document.getElementById("messageList");
+  const messages = getMessages();
+
+  list.replaceChildren();
+
+  if (messages.length === 0) {
+    const empty = document.createElement("p");
+    empty.textContent = "Be the first to share a positive message! 🌟";
+    list.appendChild(empty);
+    return;
+  }
+
+  messages.slice().reverse().forEach(item => {
+    const box = document.createElement("div");
+    box.className = "message";
+
+    const author = document.createElement("strong");
+    author.textContent = item.name;
+
+    const content = document.createElement("p");
+    content.textContent = item.message;
+
+    box.append(author, content);
+    list.appendChild(box);
+  });
+}
+
+function addMessage() {
+  const nameInput = document.getElementById("name");
+  const messageInput = document.getElementById("message");
+  const status = document.getElementById("status");
+
+  const name = nameInput.value.trim();
+  const message = messageInput.value.trim();
+
+  if (!name || !message) {
+    status.textContent = "Please enter your name and message.";
+    return;
+  }
+
+  const messages = getMessages();
+
+  if (messages.length >= 100) {
+    status.textContent = "This demo can store up to 100 messages.";
+    return;
+  }
+
+  messages.push({ name, message });
+
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(messages));
+  } catch {
+    status.textContent = "Could not save. Check your device storage.";
+    return;
+  }
+
+  messageInput.value = "";
+  status.textContent = "Your message has been saved on this device! 💙";
+  renderMessages();
+}
+
+async function shareNexora() {
+  const shareData = {
+    title: "NEXORA",
+    text: "One World. One Vision. One Future. 🌍"
+  };
+
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        copyMessage();
+      }
+    }
+  } else {
+    copyMessage();
+  }
+}
+
+async function copyMessage() {
+  const text = "NEXORA — One World. One Vision. One Future. 🌍";
+  const status = document.getElementById("status");
+
+  try {
+    await navigator.clipboard.writeText(text);
+    status.textContent = "Sharing text copied!";
+  } catch {
+    status.textContent = text;
+  }
+}
+
+renderMessages();
+</script>
+
+</body>
+</html>
