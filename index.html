@@ -153,6 +153,8 @@ footer {
   font-size: 12px;
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
 </head>
 
 <body>
@@ -210,31 +212,33 @@ footer {
 </footer>
 
 <script>
-const storageKey = "nexora_messages_v1";
 
-function getMessages() {
-  try {
-    const data = JSON.parse(localStorage.getItem(storageKey) || "[]");
-    return Array.isArray(data) ? data : [];
-  } catch {
-    return [];
-  }
-}
-
-function renderMessages() {
+async function renderMessages() {
   const list = document.getElementById("messageList");
-  const messages = getMessages();
-
   list.replaceChildren();
 
-  if (messages.length === 0) {
+  const { data, error } = await window.supabaseClient
+    .from("nexora_messages")
+    .select("id, name, message, created_at")
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (error) {
+    console.error("Could not load messages:", error);
+    const item = document.createElement("p");
+    item.textContent = "Could not load messages. Please try again.";
+    list.appendChild(item);
+    return;
+  }
+
+  if (!data || data.length === 0) {
     const empty = document.createElement("p");
     empty.textContent = "Be the first to share a positive message! 🌟";
     list.appendChild(empty);
     return;
   }
 
-  messages.slice().reverse().forEach(item => {
+  data.forEach(item => {
     const box = document.createElement("div");
     box.className = "message";
 
@@ -249,7 +253,7 @@ function renderMessages() {
   });
 }
 
-function addMessage() {
+async function addMessage() {
   const nameInput = document.getElementById("name");
   const messageInput = document.getElementById("message");
   const status = document.getElementById("status");
@@ -262,25 +266,26 @@ function addMessage() {
     return;
   }
 
-  const messages = getMessages();
-
-  if (messages.length >= 100) {
-    status.textContent = "This demo can store up to 100 messages.";
+  if (name.length > 35 || message.length > 300) {
+    status.textContent = "Name limit: 35 characters. Message limit: 300.";
     return;
   }
 
-  messages.push({ name, message });
+  status.textContent = "Saving your message...";
 
-  try {
-    localStorage.setItem(storageKey, JSON.stringify(messages));
-  } catch {
-    status.textContent = "Could not save. Check your device storage.";
+  const { error } = await window.supabaseClient
+    .from("nexora_messages")
+    .insert([{ name, message }]);
+
+  if (error) {
+    console.error("Could not save message:", error);
+    status.textContent = "Could not save. Please try again.";
     return;
   }
 
   messageInput.value = "";
-  status.textContent = "Your message has been saved on this device! 💙";
-  renderMessages();
+  status.textContent = "Your message has been shared with the world! 💙";
+  await renderMessages();
 }
 
 async function shareNexora() {
