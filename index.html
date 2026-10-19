@@ -201,6 +201,24 @@ footer {
   <p id="status" aria-live="polite"></p>
 </section>
 
+<section class="card" id="adminLoginCard">
+  <h2>🔐 NEXORA Admin Login</h2>
+
+  <label for="adminEmail">Admin email</label>
+  <input id="adminEmail" type="email"
+    autocomplete="username" placeholder="Enter your admin email">
+
+  <label for="adminPassword">Password</label>
+  <input id="adminPassword" type="password"
+    autocomplete="current-password" placeholder="Enter your password">
+
+  <button class="full" onclick="adminLogin()">🔐 Sign In</button>
+  <button class="secondary full" id="adminLogoutButton"
+    onclick="adminLogout()" hidden>Sign Out</button>
+
+  <p id="adminStatus" aria-live="polite"></p>
+</section>
+
 <section class="card">
   <h2>💙 Messages of Humanity</h2>
   <p style="color:#a8b8df">
@@ -215,6 +233,145 @@ footer {
 </footer>
 
 <script>
+
+let isNexoraAdmin = false;
+
+async function checkAdminAccess(user) {
+  const status = document.getElementById("adminStatus");
+  const loginCard = document.getElementById("adminLoginCard");
+  const logoutButton = document.getElementById("adminLogoutButton");
+
+  if (!user) {
+    isNexoraAdmin = false;
+    loginCard.querySelectorAll("input, label, button").forEach(el => {
+      if (el.id !== "adminLogoutButton") el.hidden = false;
+    });
+    logoutButton.hidden = true;
+    status.textContent = "Please sign in with your admin account.";
+    return false;
+  }
+
+  const { data, error } = await window.supabaseClient
+    .from("nexora_admins")
+    .select("user_id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (error || !data) {
+    isNexoraAdmin = false;
+    loginCard.querySelectorAll("input, label").forEach(el => el.hidden = false);
+    loginCard.querySelector('button[onclick="adminLogin()"]').hidden = false;
+    logoutButton.hidden = true;
+    status.textContent = "This account does not have NEXORA admin access.";
+    await window.supabaseClient.auth.signOut();
+    return false;
+  }
+
+  isNexoraAdmin = true;
+  loginCard.querySelectorAll("input, label").forEach(el => el.hidden = true);
+  loginCard.querySelector('button[onclick="adminLogin()"]').hidden = true;
+  logoutButton.hidden = false;
+  status.textContent = "Admin access confirmed. 🔐";
+  return true;
+}
+
+async function adminLogin() {
+  const status = document.getElementById("adminStatus");
+  const email = document.getElementById("adminEmail").value.trim();
+  const password = document.getElementById("adminPassword").value;
+
+  if (!email || !password) {
+    status.textContent = "Enter your admin email and password.";
+    return;
+  }
+
+  status.textContent = "Signing in...";
+
+  const { data, error } = await window.supabaseClient.auth
+    .signInWithPassword({ email, password });
+
+  if (error) {
+    status.textContent = "Sign-in failed. Check your email and password.";
+    return;
+  }
+
+  const allowed = await checkAdminAccess(data.user);
+  if (allowed) {
+    document.getElementById("adminPassword").value = "";
+    await renderMessages();
+  }
+}
+
+async function adminLogout() {
+  const { error } = await window.supabaseClient.auth.signOut();
+  const status = document.getElementById("adminStatus");
+
+  if (error) {
+    status.textContent = "Could not sign out. Please try again.";
+    return;
+  }
+
+  document.getElementById("adminEmail").value = "";
+  document.getElementById("adminPassword").value = "";
+  await checkAdminAccess(null);
+  await renderMessages();
+}
+
+async function restoreAdminSession() {
+  const { data, error } = await window.supabaseClient.auth.getSession();
+  if (error) {
+    document.getElementById("adminStatus").textContent =
+      "Could not check the saved session.";
+    return;
+  }
+
+  await checkAdminAccess(data.session?.user ?? null);
+  await renderMessages();
+}
+
+async function editMessage(id, currentMessage) {
+  if (!isNexoraAdmin) return;
+
+  const updatedMessage = prompt("Edit this message:", currentMessage);
+  if (updatedMessage === null) return;
+
+  const message = updatedMessage.trim();
+  if (!message || message.length > 300) {
+    alert("Message must contain 1–300 characters.");
+    return;
+  }
+
+  const { error } = await window.supabaseClient
+    .from("nexora_messages")
+    .update({ message })
+    .eq("id", id);
+
+  if (error) {
+    console.error("Could not update message:", error);
+    alert("Could not update the message. Please try again.");
+    return;
+  }
+
+  await renderMessages();
+}
+
+async function deleteMessage(id) {
+  if (!isNexoraAdmin) return;
+  if (!confirm("Are you sure you want to delete this message?")) return;
+
+  const { error } = await window.supabaseClient
+    .from("nexora_messages")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error("Could not delete message:", error);
+    alert("Could not delete the message. Please try again.");
+    return;
+  }
+
+  await renderMessages();
+}
 
 async function renderMessages() {
   const list = document.getElementById("messageList");
@@ -252,6 +409,30 @@ async function renderMessages() {
     content.textContent = item.message;
 
     box.append(author, content);
+
+    if (isNexoraAdmin) {
+      const controls = document.createElement("div");
+      controls.className = "admin-message-controls";
+
+      const editButton = document.createElement("button");
+      editButton.type = "button";
+      editButton.textContent = "✏️ Edit";
+      editButton.addEventListener("click", () =>
+        editMessage(item.id, item.message)
+      );
+
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.textContent = "🗑️ Delete";
+      deleteButton.className = "secondary";
+      deleteButton.addEventListener("click", () =>
+        deleteMessage(item.id)
+      );
+
+      controls.append(editButton, deleteButton);
+      box.appendChild(controls);
+    }
+
     list.appendChild(box);
   });
 }
@@ -322,6 +503,7 @@ async function copyMessage() {
   }
 }
 
+restoreAdminSession();
 renderMessages();
 </script>
 
