@@ -220,6 +220,14 @@ footer {
   <p id="adminStatus" aria-live="polite"></p>
 </section>
 
+<section class="card" id="adminReportsCard" hidden>
+  <h2>🚩 Global Chat Reports</h2>
+  <button class="full" type="button" onclick="loadChatReports()">
+    🔄 Load Reports
+  </button>
+  <div id="chatReportsList"></div>
+</section>
+
 <section class="card">
   <h2>💙 Messages of Humanity</h2>
   <p style="color:#a8b8df">
@@ -266,6 +274,7 @@ async function checkAdminAccess(user) {
 
   if (!user) {
     isNexoraAdmin = false;
+    document.getElementById("adminReportsCard").hidden = true;
     loginCard.querySelectorAll("input, label, button").forEach(el => {
       if (el.id !== "adminLogoutButton") el.hidden = false;
     });
@@ -282,6 +291,7 @@ async function checkAdminAccess(user) {
 
   if (error || !data) {
     isNexoraAdmin = false;
+    document.getElementById("adminReportsCard").hidden = true;
     loginCard.querySelectorAll("input, label").forEach(el => el.hidden = false);
     loginCard.querySelector('button[onclick="adminLogin()"]').hidden = false;
     logoutButton.hidden = true;
@@ -291,6 +301,7 @@ async function checkAdminAccess(user) {
   }
 
   isNexoraAdmin = true;
+  document.getElementById("adminReportsCard").hidden = false;
   loginCard.querySelectorAll("input, label").forEach(el => el.hidden = true);
   loginCard.querySelector('button[onclick="adminLogin()"]').hidden = true;
   logoutButton.hidden = false;
@@ -394,6 +405,58 @@ async function deleteMessage(id) {
   }
 
   await renderMessages();
+}
+
+
+async function loadChatReports() {
+  if (!isNexoraAdmin) return;
+
+  const list = document.getElementById("chatReportsList");
+  list.replaceChildren();
+
+  const loading = document.createElement("p");
+  loading.textContent = "Loading reports...";
+  list.appendChild(loading);
+
+  const { data, error } = await window.supabaseClient
+    .from("global_chat_reports")
+    .select("id, message_id, reason, created_at")
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  list.replaceChildren();
+
+  if (error) {
+    console.error("Could not load chat reports:", error);
+    const item = document.createElement("p");
+    item.textContent = "Could not load reports. Please try again.";
+    list.appendChild(item);
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    const item = document.createElement("p");
+    item.textContent = "No chat reports found.";
+    list.appendChild(item);
+    return;
+  }
+
+  for (const report of data) {
+    const box = document.createElement("div");
+    box.className = "message";
+
+    const reason = document.createElement("p");
+    reason.textContent = "🚩 Reason: " + report.reason;
+
+    const messageInfo = document.createElement("p");
+    messageInfo.textContent = "Message ID: " + report.message_id;
+
+    const date = document.createElement("small");
+    date.textContent = new Date(report.created_at).toLocaleString();
+
+    box.append(reason, messageInfo, date);
+    list.appendChild(box);
+  }
 }
 
 async function renderMessages() {
