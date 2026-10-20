@@ -40,6 +40,13 @@ async function renderGlobalChat() {
 
     box.append(author, message, time);
 
+    const reportButton = document.createElement("button");
+    reportButton.type = "button";
+    reportButton.className = "secondary";
+    reportButton.textContent = "🚩 Report";
+    reportButton.addEventListener("click", () => reportChatMessage(item.id));
+    box.appendChild(reportButton);
+
     if (isNexoraAdmin) {
       const button = document.createElement("button");
       button.type = "button";
@@ -104,4 +111,29 @@ async function deleteChatMessage(id) {
   }
 
   await renderGlobalChat();
+}
+
+async function reportChatMessage(id) {
+  const reason = prompt("Why are you reporting this message? (3–300 characters)");
+  if (reason === null) return;
+
+  const cleanReason = reason.trim();
+  const status = document.getElementById("chatStatus");
+
+  if (cleanReason.length < 3 || cleanReason.length > 300) {
+    status.textContent = "Please enter a reason between 3 and 300 characters.";
+    return;
+  }
+
+  const { error } = await window.supabaseClient
+    .from("global_chat_reports")
+    .insert([{ message_id: id, reason: cleanReason }]);
+
+  if (error) {
+    console.error("Global Chat report:", error);
+    status.textContent = "Could not submit report. Please try again.";
+    return;
+  }
+
+  status.textContent = "Report submitted. Thank you. 💙";
 }
