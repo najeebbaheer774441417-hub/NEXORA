@@ -158,6 +158,7 @@ footer {
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
+<script src="global-chat.js"></script>
 </head>
 
 <body>
@@ -225,6 +226,28 @@ footer {
     Positive messages saved on this device
   </p>
   <div id="messageList"></div>
+</section>
+
+<section class="card" id="globalChatCard">
+  <h2>💬 NEXORA Global Chat</h2>
+  <p style="color:#a8b8df">
+    Connect with people around the world through respectful conversation. 🌍
+  </p>
+
+  <label for="chatName">Your name or nickname</label>
+  <input id="chatName" type="text" maxlength="35"
+    placeholder="Enter your name">
+
+  <label for="chatMessage">Your message</label>
+  <textarea id="chatMessage" maxlength="500"
+    placeholder="Write your message..."></textarea>
+
+  <button class="full" type="button" onclick="sendChatMessage()">
+    💬 Send Message
+  </button>
+
+  <p id="chatStatus" aria-live="polite"></p>
+  <div id="globalChatList"></div>
 </section>
 
 <footer>
@@ -504,6 +527,8 @@ async function copyMessage() {
 }
 
 restoreAdminSession();
+renderGlobalChat();
+setInterval(renderGlobalChat, 10000);
 </script>
 
 </body>
