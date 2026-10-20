@@ -208,6 +208,7 @@ footer {
   <input id="userPassword" type="password" placeholder="Password (at least 6 characters)">
   <button class="full" onclick="userSignUp()">Create Account</button>
   <button class="secondary full" onclick="userLogin()">Sign In</button>
+  <button class="secondary full" onclick="userResetPassword()">Forgot Password?</button>
   <button class="secondary full" onclick="userLogout()">Sign Out</button>
   <p id="userAuthStatus" aria-live="polite"></p>
 </section>
@@ -415,6 +416,26 @@ async function userLogin() {
   status.textContent = error
     ? error.message
     : "You are signed in to NEXORA! 🌍";
+}
+
+async function userResetPassword() {
+  const status = document.getElementById("userAuthStatus");
+  const email = document.getElementById("userEmail").value.trim();
+
+  if (!email) {
+    status.textContent = "Enter your email first.";
+    return;
+  }
+
+  status.textContent = "Sending password reset email...";
+
+  const { error } = await window.supabaseClient.auth.resetPasswordForEmail(email, {
+    redirectTo: "https://najeebbaheer774441417-hub.github.io/NEXORA/"
+  });
+
+  status.textContent = error
+    ? error.message
+    : "Password reset email sent. Check your inbox.";
 }
 
 async function userLogout() {
