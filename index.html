@@ -202,6 +202,16 @@ footer {
   <p id="status" aria-live="polite"></p>
 </section>
 
+<section class="card" id="userAuthCard">
+  <h2>🌍 Join NEXORA</h2>
+  <input id="userEmail" type="email" placeholder="Your email">
+  <input id="userPassword" type="password" placeholder="Password (at least 6 characters)">
+  <button class="full" onclick="userSignUp()">Create Account</button>
+  <button class="secondary full" onclick="userLogin()">Sign In</button>
+  <button class="secondary full" onclick="userLogout()">Sign Out</button>
+  <p id="userAuthStatus" aria-live="polite"></p>
+</section>
+
 <section class="card" id="adminLoginCard">
   <h2>🔐 NEXORA Admin Login</h2>
 
@@ -296,7 +306,6 @@ async function checkAdminAccess(user) {
     loginCard.querySelector('button[onclick="adminLogin()"]').hidden = false;
     logoutButton.hidden = true;
     status.textContent = "This account does not have NEXORA admin access.";
-    await window.supabaseClient.auth.signOut();
     return false;
   }
 
@@ -361,6 +370,57 @@ async function restoreAdminSession() {
 
   await checkAdminAccess(data.session?.user ?? null);
   await renderMessages();
+}
+
+async function userSignUp() {
+  const status = document.getElementById("userAuthStatus");
+  const email = document.getElementById("userEmail").value.trim();
+  const password = document.getElementById("userPassword").value;
+
+  if (!email || password.length < 6) {
+    status.textContent = "Enter a valid email and a password of at least 6 characters.";
+    return;
+  }
+
+  status.textContent = "Creating account...";
+  const { data, error } = await window.supabaseClient.auth.signUp({
+    email, password
+  });
+
+  if (error) {
+    status.textContent = error.message;
+    return;
+  }
+
+  status.textContent = data.session
+    ? "Account created successfully! 🌍"
+    : "Check your email to confirm your account.";
+}
+
+async function userLogin() {
+  const status = document.getElementById("userAuthStatus");
+  const email = document.getElementById("userEmail").value.trim();
+  const password = document.getElementById("userPassword").value;
+
+  if (!email || !password) {
+    status.textContent = "Enter your email and password.";
+    return;
+  }
+
+  status.textContent = "Signing in...";
+  const { error } = await window.supabaseClient.auth.signInWithPassword({
+    email, password
+  });
+
+  status.textContent = error
+    ? error.message
+    : "You are signed in to NEXORA! 🌍";
+}
+
+async function userLogout() {
+  const status = document.getElementById("userAuthStatus");
+  const { error } = await window.supabaseClient.auth.signOut();
+  status.textContent = error ? error.message : "You have signed out.";
 }
 
 async function editMessage(id, currentMessage) {
