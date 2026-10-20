@@ -477,9 +477,36 @@ async function loadChatReports() {
     date.textContent = new Date(report.created_at).toLocaleString();
 
     box.append(reason, messageInfo, originalInfo, date);
+
+    const deleteReportButton = document.createElement("button");
+    deleteReportButton.type = "button";
+    deleteReportButton.className = "secondary";
+    deleteReportButton.textContent = "🗑️ Delete Report";
+    deleteReportButton.addEventListener("click", () => deleteChatReport(report.id));
+
+    box.appendChild(deleteReportButton);
     list.appendChild(box);
   }
 }
+
+async function deleteChatReport(id) {
+  if (!isNexoraAdmin) return;
+  if (!confirm("Delete this report? The original chat message will not be deleted.")) return;
+
+  const { error } = await window.supabaseClient
+    .from("global_chat_reports")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error("Could not delete report:", error);
+    alert("Could not delete this report. Please try again.");
+    return;
+  }
+
+  await loadChatReports();
+}
+
 async function renderMessages() {
   const list = document.getElementById("messageList");
   list.replaceChildren();
