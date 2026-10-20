@@ -418,7 +418,7 @@ async function loadChatReports() {
   loading.textContent = "Loading reports...";
   list.appendChild(loading);
 
-  const { data, error } = await window.supabaseClient
+  const { data: reports, error } = await window.supabaseClient
     .from("global_chat_reports")
     .select("id, message_id, reason, created_at")
     .order("created_at", { ascending: false })
@@ -427,21 +427,32 @@ async function loadChatReports() {
   list.replaceChildren();
 
   if (error) {
-    console.error("Could not load chat reports:", error);
-    const item = document.createElement("p");
-    item.textContent = "Could not load reports. Please try again.";
-    list.appendChild(item);
+    console.error("Could not load reports:", error);
+    list.textContent = "Could not load reports. Please try again.";
     return;
   }
 
-  if (!data || data.length === 0) {
-    const item = document.createElement("p");
-    item.textContent = "No chat reports found.";
-    list.appendChild(item);
+  if (!reports || reports.length === 0) {
+    list.textContent = "No chat reports found.";
     return;
   }
 
-  for (const report of data) {
+  const messageIds = [...new Set(reports.map(report => report.message_id))];
+
+  const { data: messages, error: messageError } = await window.supabaseClient
+    .from("global_chat_messages")
+    .select("id, name, message")
+    .in("id", messageIds);
+
+  if (messageError) {
+    console.error("Could not load reported messages:", messageError);
+  }
+
+  const messageMap = new Map(
+    (messages || []).map(message => [message.id, message])
+  );
+
+  for (const report of reports) {
     const box = document.createElement("div");
     box.className = "message";
 
@@ -451,14 +462,24 @@ async function loadChatReports() {
     const messageInfo = document.createElement("p");
     messageInfo.textContent = "Message ID: " + report.message_id;
 
+    const original = messageMap.get(report.message_id);
+    const originalInfo = document.createElement("p");
+
+    if (original) {
+      originalInfo.textContent =
+        "Original message — " + original.name + ": " + original.message;
+    } else {
+      originalInfo.textContent =
+        "Original message is unavailable or has been deleted.";
+    }
+
     const date = document.createElement("small");
     date.textContent = new Date(report.created_at).toLocaleString();
 
-    box.append(reason, messageInfo, date);
+    box.append(reason, messageInfo, originalInfo, date);
     list.appendChild(box);
   }
 }
-
 async function renderMessages() {
   const list = document.getElementById("messageList");
   list.replaceChildren();
