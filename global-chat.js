@@ -40,6 +40,17 @@ async function renderGlobalChat() {
 
     box.append(author, message, time);
 
+    const likeButton = document.createElement("button");
+    likeButton.type = "button";
+    likeButton.className = "secondary";
+    likeButton.textContent = "❤️ Like (…)";
+    likeButton.addEventListener("click", () => likeChatMessage(item.id, likeButton));
+    box.appendChild(likeButton);
+
+    getChatLikeCount(item.id).then(count => {
+      likeButton.textContent = `❤️ Like (${count})`;
+    });
+
     const reportButton = document.createElement("button");
     reportButton.type = "button";
     reportButton.className = "secondary";
@@ -136,4 +147,53 @@ async function reportChatMessage(id) {
   }
 
   status.textContent = "Report submitted. Thank you. 💙";
+}
+
+async function getChatLikeCount(messageId) {
+  const { count, error } = await window.supabaseClient
+    .from("global_chat_likes")
+    .select("id", { count: "exact", head: true })
+    .eq("message_id", messageId);
+
+  if (error) {
+    console.error("Like count error:", error);
+    return 0;
+  }
+
+  return count || 0;
+}
+
+function getChatVoterId() {
+  let voterId = localStorage.getItem("nexora_chat_voter_id");
+
+  if (!voterId) {
+    voterId = crypto.randomUUID();
+    localStorage.setItem("nexora_chat_voter_id", voterId);
+  }
+
+  return voterId;
+}
+
+async function likeChatMessage(messageId, button) {
+  const status = document.getElementById("chatStatus");
+  const voterId = getChatVoterId();
+
+  button.disabled = true;
+
+  const { error } = await window.supabaseClient
+    .from("global_chat_likes")
+    .insert([{
+      message_id: messageId,
+      voter_id: voterId
+    }]);
+
+  if (error) {
+    console.error("Like error:", error);
+    status.textContent = "Could not add Like. Please try again.";
+    button.disabled = false;
+    return;
+  }
+
+  status.textContent = "Liked! ❤️";
+  await renderGlobalChat();
 }
