@@ -213,6 +213,18 @@ footer {
   <p id="userAuthStatus" aria-live="polite"></p>
 </section>
 
+<section class="card" id="passwordRecoveryCard" hidden>
+  <h2>🔐 Choose a new password</h2>
+  <label for="newUserPassword">New password</label>
+  <input id="newUserPassword" type="password"
+    autocomplete="new-password" placeholder="At least 6 characters">
+  <label for="confirmUserPassword">Confirm new password</label>
+  <input id="confirmUserPassword" type="password"
+    autocomplete="new-password" placeholder="Enter it again">
+  <button class="full" onclick="userUpdatePassword()">Update Password</button>
+  <p id="passwordRecoveryStatus" aria-live="polite"></p>
+</section>
+
 <section class="card" id="adminLoginCard">
   <h2>🔐 NEXORA Admin Login</h2>
 
@@ -436,6 +448,39 @@ async function userResetPassword() {
   status.textContent = error
     ? error.message
     : "Password reset email sent. Check your inbox.";
+}
+
+async function userUpdatePassword() {
+  const status = document.getElementById("passwordRecoveryStatus");
+  const password = document.getElementById("newUserPassword").value;
+  const confirm = document.getElementById("confirmUserPassword").value;
+
+  if (password.length < 6) {
+    status.textContent = "Password must be at least 6 characters.";
+    return;
+  }
+
+  if (password !== confirm) {
+    status.textContent = "The passwords do not match.";
+    return;
+  }
+
+  status.textContent = "Updating password...";
+
+  const { error } = await window.supabaseClient.auth.updateUser({
+    password: password
+  });
+
+  if (error) {
+    status.textContent = error.message;
+    return;
+  }
+
+  document.getElementById("newUserPassword").value = "";
+  document.getElementById("confirmUserPassword").value = "";
+  document.getElementById("passwordRecoveryCard").hidden = true;
+  document.getElementById("userAuthStatus").textContent =
+    "Password updated successfully! You can now sign in. 🌍";
 }
 
 async function userLogout() {
@@ -717,6 +762,16 @@ async function copyMessage() {
     status.textContent = text;
   }
 }
+
+window.supabaseClient.auth.onAuthStateChange((event) => {
+  if (event === "PASSWORD_RECOVERY") {
+    const card = document.getElementById("passwordRecoveryCard");
+    card.hidden = false;
+    document.getElementById("passwordRecoveryStatus").textContent =
+      "Enter and confirm your new password.";
+    card.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+});
 
 restoreAdminSession();
 renderGlobalChat();
