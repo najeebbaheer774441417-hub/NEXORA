@@ -273,6 +273,7 @@ button.secondary { background:#293b63; color:white; }
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <script src="global-chat.js"></script>
+<script src="voice-chat.js"></script>
 </head>
 
 <body>
@@ -390,6 +391,16 @@ button.secondary { background:#293b63; color:white; }
   <button class="full" type="button" onclick="sendChatMessage()">
     💬 Send Message
   </button>
+
+  <div class="voice-chat-box">
+    <h3>🎙️ Voice Messages</h3>
+    <p id="voiceStatus" aria-live="polite">Record a voice message to share.</p>
+    <button type="button" id="voiceRecordButton">🎙️ Start Recording</button>
+    <button type="button" id="voiceStopButton" disabled>⏹️ Stop</button>
+    <audio id="voicePreview" controls hidden></audio>
+    <button type="button" id="voiceSendButton" disabled>📤 Send Voice</button>
+    <div id="globalVoiceList"></div>
+  </div>
 
   <p id="chatStatus" aria-live="polite"></p>
   <div id="globalChatList"></div>
