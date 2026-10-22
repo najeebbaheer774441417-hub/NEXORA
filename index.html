@@ -155,6 +155,120 @@ footer {
   color: #8495bb;
   font-size: 12px;
 }
+
+/* NEXORA Global Chat Custom Design */
+#globalChatList {
+  margin-top: 22px;
+}
+
+#globalChatList .message {
+  background: linear-gradient(145deg, #172747, #101a32);
+  border: 1px solid #30466f;
+  border-left: 4px solid #69eaff;
+  border-radius: 16px;
+  padding: 18px;
+  margin: 16px 0;
+  text-align: left;
+  overflow-wrap: anywhere;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+#globalChatList .message strong {
+  display: block;
+  color: #69eaff;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+#globalChatList .message p {
+  color: #eef4ff;
+  font-size: 15px;
+  line-height: 1.8;
+  margin: 8px 0 12px;
+  white-space: pre-wrap;
+}
+
+#globalChatList .message small {
+  display: block;
+  color: #9eafd2;
+  font-size: 12px;
+  margin: 10px 0;
+}
+
+#globalChatList .message button {
+  margin: 7px 6px 0 0;
+  padding: 10px 13px;
+  border-radius: 9px;
+  font-size: 13px;
+}
+
+#globalChatList .message button.secondary {
+  background: #263b63;
+  color: #f4f7ff;
+  border: 1px solid #3b527d;
+}
+
+#globalChatList .message button:hover {
+  filter: brightness(1.12);
+}
+
+@media (max-width: 480px) {
+  #globalChatList .message {
+    padding: 14px;
+    border-radius: 13px;
+  }
+
+  #globalChatList .message button {
+    padding: 10px;
+    font-size: 12px;
+  }
+}
+
+
+/* NEXORA PREMIUM GLASS DESIGN */
+body {
+ background: radial-gradient(ellipse at top left,#192b50,transparent 55%),linear-gradient(145deg,#070b18,#10152e);
+ color:#f4f7ff; line-height:1.7;
+}
+h1 {
+ background:linear-gradient(90deg,#fff,#69eaff,#b8a2ff);
+ -webkit-background-clip:text; background-clip:text;
+ -webkit-text-fill-color:transparent;
+}
+h2 { color:#9deaff; }
+.card {
+ background:linear-gradient(145deg,rgba(30,47,82,.88),rgba(12,19,40,.94));
+ border:1px solid #30466f; border-radius:22px;
+ box-shadow:0 14px 38px #0005;
+ backdrop-filter:blur(12px);
+ padding:22px; margin:22px auto;
+}
+input,textarea,select {
+ box-sizing:border-box; max-width:100%;
+ background:#0a1228; color:#fff;
+ border:1px solid #3a507a; border-radius:12px;
+ padding:12px;
+}
+button {
+ background:linear-gradient(110deg,#48c9f0,#898cff);
+ color:#071225; border:0; border-radius:12px;
+ padding:12px 16px; font-weight:bold;
+}
+button.secondary { background:#293b63; color:white; }
+#globalChatList .message {
+ background:linear-gradient(145deg,#1c2d52,#0d172f);
+ border:1px solid #30466f; border-left:4px solid #69eaff;
+ border-radius:17px; padding:17px; margin:16px 0;
+ box-shadow:0 8px 24px #0004; overflow-wrap:anywhere;
+}
+#globalChatList .message strong { color:#83eaff; }
+#globalChatList .message p { line-height:1.85; }
+@media(max-width:480px) {
+ .card { padding:15px; border-radius:17px; }
+}
+
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
