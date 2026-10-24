@@ -501,7 +501,12 @@
       )
       .subscribe((state) => {
         if (state === "SUBSCRIBED") {
-          setStatus("Ready for NEXORA calls. 🌍");
+          const usersFailed =
+            userSelect.options.length === 1 &&
+            userSelect.options[0].textContent === "Could not load users";
+          if (!usersFailed) {
+            setStatus("Ready for NEXORA calls. 🌍");
+          }
         } else if (state === "CHANNEL_ERROR") {
           setStatus("Could not connect to call signaling.");
         }
