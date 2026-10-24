@@ -274,6 +274,7 @@ button.secondary { background:#293b63; color:white; }
 <script src="supabase-config.js"></script>
 <script src="global-chat.js"></script>
 <script src="voice-chat.js" defer></script>
+<script src="live-calls.js" defer></script>
 </head>
 
 <body>
@@ -404,6 +405,50 @@ button.secondary { background:#293b63; color:white; }
 
   <p id="chatStatus" aria-live="polite"></p>
   <div id="globalChatList"></div>
+</section>
+
+
+<section class="card" id="liveCallsCard">
+  <h2>📞 NEXORA Live Calls</h2>
+  <p>Connect live with another signed-in NEXORA user.</p>
+
+  <label for="callUserSelect">Choose a user</label>
+  <select id="callUserSelect">
+    <option value="">Loading users...</option>
+  </select>
+
+  <button class="full" type="button" id="startAudioCallButton">
+    📞 Voice Call
+  </button>
+
+  <button class="full" type="button" id="startVideoCallButton">
+    🎥 Video Call
+  </button>
+
+  <p id="liveCallStatus" aria-live="polite">
+    Sign in to use live calls.
+  </p>
+
+  <div id="incomingCallControls" hidden>
+    <p id="incomingCallText">Incoming call</p>
+    <button type="button" id="acceptCallButton">✅ Accept</button>
+    <button type="button" id="rejectCallButton">❌ Reject</button>
+  </div>
+
+  <button class="secondary full" type="button"
+          id="endLiveCallButton" hidden>
+    📵 End Call
+  </button>
+
+  <div id="liveCallVideos" hidden>
+    <h3>Your camera</h3>
+    <video id="localCallVideo" autoplay playsinline muted
+           style="width:100%;max-width:320px"></video>
+
+    <h3>Other user</h3>
+    <video id="remoteCallVideo" autoplay playsinline
+           style="width:100%;max-width:320px"></video>
+  </div>
 </section>
 
 <footer>
