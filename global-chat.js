@@ -6,7 +6,7 @@ async function renderGlobalChat() {
 
   const { data, error } = await window.supabaseClient
     .from("global_chat_messages")
-    .select("id, name, message, created_at")
+    .select("id, user_id, name, message, created_at")
     .order("created_at", { ascending: false })
     .limit(100);
 
@@ -25,12 +25,42 @@ async function renderGlobalChat() {
     return;
   }
 
+  const userIds = [...new Set(data.map(item => item.user_id).filter(Boolean))];
+  const profileMap = new Map();
+  if (userIds.length) {
+    const { data: profiles, error: profileError } = await window.supabaseClient
+      .from("profiles")
+      .select("user_id, display_name, avatar_url")
+      .in("user_id", userIds);
+    if (profileError) console.error("Chat profiles:", profileError);
+    (profiles || []).forEach(profile => profileMap.set(profile.user_id, profile));
+  }
+
   data.forEach(item => {
     const box = document.createElement("div");
     box.className = "message";
 
+    const profile = item.user_id ? profileMap.get(item.user_id) : null;
+    const authorLine = document.createElement("div");
+    authorLine.style.display = "flex";
+    authorLine.style.alignItems = "center";
+    authorLine.style.gap = "10px";
+    authorLine.style.marginBottom = "8px";
+
+    if (profile && profile.avatar_url) {
+      const avatar = document.createElement("img");
+      avatar.src = profile.avatar_url;
+      avatar.alt = "Profile picture";
+      avatar.width = 42;
+      avatar.height = 42;
+      avatar.style.borderRadius = "50%";
+      avatar.style.objectFit = "cover";
+      authorLine.appendChild(avatar);
+    }
+
     const author = document.createElement("strong");
-    author.textContent = item.name;
+    author.textContent = (profile && profile.display_name) || item.name || "NEXORA User";
+    authorLine.appendChild(author);
 
     const message = document.createElement("p");
     message.textContent = item.message;
@@ -38,7 +68,7 @@ async function renderGlobalChat() {
     const time = document.createElement("small");
     time.textContent = new Date(item.created_at).toLocaleString();
 
-    box.append(author, message, time);
+    box.append(authorLine, message, time);
 
     const likeButton = document.createElement("button");
     likeButton.type = "button";
@@ -91,9 +121,11 @@ async function sendChatMessage() {
 
   status.textContent = "Sending message...";
 
+  const { data: { session } } = await window.supabaseClient.auth.getSession();
+
   const { error } = await window.supabaseClient
     .from("global_chat_messages")
-    .insert([{ name, message }]);
+    .insert([{ name, message, user_id: session?.user?.id ?? null }]);
 
   if (error) {
     console.error("Global Chat:", error);

@@ -593,6 +593,7 @@ footer {
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <script src="global-chat.js"></script>
+<script src="profile.js" defer></script>
 <script src="voice-chat.js" defer></script>
 <script src="live-calls.js" defer></script>
 </head>
@@ -642,11 +643,40 @@ footer {
   <h2>🌍 Join NEXORA</h2>
   <input id="userEmail" type="email" placeholder="Your email">
   <input id="userPassword" type="password" placeholder="Password (at least 6 characters)">
-  <button class="full" onclick="userSignUp()">Create Account</button>
-  <button class="secondary full" onclick="userLogin()">Sign In</button>
-  <button class="secondary full" onclick="userResetPassword()">Forgot Password?</button>
-  <button class="secondary full" onclick="userLogout()">Sign Out</button>
+  <button id="signUpButton" class="full" onclick="userSignUp()">Create Account</button>
+  <button id="signInButton" class="secondary full" onclick="userLogin()">Sign In</button>
+  <button id="resetPasswordButton" class="secondary full" onclick="userResetPassword()">Forgot Password?</button>
+  <button id="signOutButton" class="secondary full" onclick="userLogout()" hidden>Sign Out</button>
   <p id="userAuthStatus" aria-live="polite"></p>
+</section>
+
+<section class="card" id="profileCard" hidden>
+  <h2>👤 My NEXORA Profile</h2>
+
+  <div style="text-align:center; margin:16px 0;">
+    <img id="profileAvatarPreview"
+      src="https://placehold.co/120x120/111a35/69eaff?text=Profile"
+      alt="Profile picture"
+      width="120" height="120"
+      style="border-radius:50%; object-fit:cover; border:2px solid #69eaff;">
+  </div>
+
+  <label for="profileAvatar">Profile picture</label>
+  <input id="profileAvatar" type="file"
+    accept="image/jpeg,image/png,image/webp">
+
+  <label for="profileDisplayName">Display name</label>
+  <input id="profileDisplayName" type="text"
+    maxlength="35" placeholder="Your display name">
+
+  <label for="profileBio">Short bio</label>
+  <textarea id="profileBio" maxlength="160"
+    placeholder="Tell the world a little about yourself..."></textarea>
+
+  <button class="full" type="button"
+    onclick="saveNexoraProfile()">💾 Save Profile</button>
+
+  <p id="profileStatus" aria-live="polite"></p>
 </section>
 
 <section class="card" id="passwordRecoveryCard" hidden>
@@ -1253,9 +1283,22 @@ async function copyMessage() {
   }
 }
 
-window.supabaseClient.auth.onAuthStateChange((event) => {
-  if (event === "PASSWORD_RECOVERY") {
-    const card = document.getElementById("passwordRecoveryCard");
+function updateUserAuthUI(session) {
+  const signedIn = Boolean(session?.user);
+  document.getElementById("userEmail").hidden = signedIn;
+  document.getElementById("userPassword").hidden = signedIn;
+  document.getElementById("signUpButton").hidden = signedIn;
+  document.getElementById("signInButton").hidden = signedIn;
+  document.getElementById("resetPasswordButton").hidden = signedIn;
+  document.getElementById("signOutButton").hidden = !signedIn;
+}
+
+window.supabaseClient.auth.onAuthStateChange((event, session) => {
+  updateUserAuthUI(session);
+  loadNexoraProfile(session?.user ?? null);
+
+ if (event === "PASSWORD_RECOVERY") {
+   const card = document.getElementById("passwordRecoveryCard");
     card.hidden = false;
     document.getElementById("passwordRecoveryStatus").textContent =
       "Enter and confirm your new password.";
