@@ -589,6 +589,98 @@ footer {
   }
 }
 
+
+/* NEXORA REAL NAVIGATION */
+#nexoraNavigation {
+  grid-area: sidebar;
+  position: sticky;
+  top: 90px;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 22px 0;
+  padding: 16px;
+  border: 1px solid #30466f;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #1c2d52, #0d172f);
+  box-sizing: border-box;
+}
+
+#nexoraNavigation a {
+  display: block;
+  padding: 12px;
+  border-radius: 10px;
+  color: #eaf4ff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+#nexoraNavigation a:hover,
+#nexoraNavigation a:focus-visible {
+  background: #29436d;
+  outline: 2px solid #69eaff;
+  outline-offset: 1px;
+}
+
+#homeSection,
+#humanityMessages,
+#globalChatCard,
+#liveCallsCard,
+#userAuthCard {
+  scroll-margin-top: 90px;
+}
+
+@media (min-width: 1000px) {
+  body::before {
+    display: none !important;
+    content: none !important;
+  }
+}
+
+@media (max-width: 999px) {
+  #nexoraNavigation {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin: 0;
+    padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
+    border-radius: 14px 14px 0 0;
+    background: #0b1228f7;
+    backdrop-filter: blur(14px);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 2px;
+    overflow-x: auto;
+  }
+
+  #nexoraNavigation a {
+    flex: 1 0 0;
+    min-width: 0;
+    padding: 10px 2px;
+    text-align: center;
+    font-size: 11px;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  body {
+    padding-bottom: 100px !important;
+  }
+
+  #homeSection,
+  #humanityMessages,
+  #globalChatCard,
+  #liveCallsCard,
+  #userAuthCard {
+    scroll-margin-top: 85px;
+  }
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
@@ -604,8 +696,16 @@ footer {
   <div class="logo">NEXORA</div>
   <p>ONE WORLD. ONE VISION. ONE FUTURE.</p>
 </header>
+<nav id="nexoraNavigation" aria-label="Main navigation">
+  <a href="#homeSection">🏠 Home</a>
+  <a href="#humanityMessages">💙 Messages</a>
+  <a href="#globalChatCard">💬 Global Chat</a>
+  <a href="#liveCallsCard">📞 Calls</a>
+  <a href="#userAuthCard">👤 Account</a>
+</nav>
 
-<section class="hero">
+
+<section class="hero" id="homeSection">
   <h1>One World.<br><span class="highlight">One Human Family.</span></h1>
 
   <p class="description">
@@ -717,7 +817,7 @@ footer {
   <div id="chatReportsList"></div>
 </section>
 
-<section class="card">
+<section class="card" id="humanityMessages">
   <h2>💙 Messages of Humanity</h2>
   <p style="color:#a8b8df">
     Positive messages saved on this device
