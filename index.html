@@ -25,11 +25,11 @@
   <p>ONE WORLD. ONE VISION. ONE FUTURE.</p>
 </header>
 <nav id="nexoraNavigation" aria-label="Main navigation">
-  <a href="#homeSection">🏠 Home</a>
-  <a href="#humanityMessages">💙 Messages</a>
-  <a href="#globalChatCard">💬 Global Chat</a>
-  <a href="#liveCallsCard">📞 Calls</a>
-  <a href="#userAuthCard">👤 Account</a>
+  <a href="#homeSection" data-view="home">🏠 Home</a>
+  <a href="#humanityMessages" data-view="messages">💙 Messages</a>
+  <a href="#globalChatCard" data-view="global">💬 Global Chat</a>
+  <a href="#liveCallsCard" data-view="calls">📞 Calls</a>
+  <a href="#userAuthCard" data-view="account">👤 Account</a>
 </nav>
 
 
@@ -46,7 +46,7 @@
   <p class="highlight">Every voice matters. Every message counts.</p>
 </section>
 
-<section class="card">
+<section class="card" id="shareMessageCard">
   <h2>🌎 Share Your Message</h2>
 
   <label for="name">Your name or nickname</label>
@@ -711,8 +711,74 @@ async function copyMessage() {
   }
 }
 
+
+const NEXORA_VIEW_GROUPS = {
+  home: ["homeSection", "shareMessageCard"],
+  messages: ["humanityMessages"],
+  global: ["globalChatCard"],
+  calls: ["liveCallsCard"],
+  account: [
+    "userAuthCard",
+    "profileCard",
+    "passwordRecoveryCard",
+    "adminLoginCard",
+    "adminReportsCard"
+  ]
+};
+
+function setNexoraView(view, updateHash = true) {
+  if (!NEXORA_VIEW_GROUPS[view]) view = "home";
+
+  const activeIds = NEXORA_VIEW_GROUPS[view];
+  const allIds = Object.values(NEXORA_VIEW_GROUPS).flat();
+
+  allIds.forEach(id => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.classList.toggle("nexora-view-hidden", !activeIds.includes(id));
+    }
+  });
+
+  document.querySelectorAll("#nexoraNavigation a[data-view]").forEach(link => {
+    if (link.dataset.view === view) {
+      link.setAttribute("aria-current", "page");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+
+  if (updateHash) {
+    const hashes = {
+      home: "#homeSection",
+      messages: "#humanityMessages",
+      global: "#globalChatCard",
+      calls: "#liveCallsCard",
+      account: "#userAuthCard"
+    };
+    history.replaceState(null, "", hashes[view]);
+  }
+}
+
+document.querySelectorAll("#nexoraNavigation a[data-view]").forEach(link => {
+  link.addEventListener("click", event => {
+    event.preventDefault();
+    setNexoraView(link.dataset.view);
+  });
+});
+
+const nexoraInitialHash = location.hash.slice(1);
+const nexoraHashViews = {
+  homeSection: "home",
+  humanityMessages: "messages",
+  globalChatCard: "global",
+  liveCallsCard: "calls",
+  userAuthCard: "account"
+};
+setNexoraView(nexoraHashViews[nexoraInitialHash] || "home", false);
+
 function updateUserAuthUI(session) {
   const signedIn = Boolean(session?.user);
+  document.body.classList.toggle("nexora-dashboard-active", signedIn);
   document.getElementById("userEmail").hidden = signedIn;
   document.getElementById("userPassword").hidden = signedIn;
   document.getElementById("signUpButton").hidden = signedIn;
@@ -724,9 +790,11 @@ function updateUserAuthUI(session) {
 window.supabaseClient.auth.onAuthStateChange((event, session) => {
   updateUserAuthUI(session);
   loadNexoraProfile(session?.user ?? null);
+  if (event === "SIGNED_IN") setNexoraView("home", false);
 
  if (event === "PASSWORD_RECOVERY") {
    const card = document.getElementById("passwordRecoveryCard");
+   setNexoraView("account", false);
     card.hidden = false;
     document.getElementById("passwordRecoveryStatus").textContent =
       "Enter and confirm your new password.";
