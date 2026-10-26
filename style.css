@@ -668,3 +668,793 @@ footer {
     scroll-margin-top: 85px;
   }
 }
+
+/* NEXORA — PREMIUM SOCIAL LAYOUT */
+:root {
+  --nx-bg: #070b18;
+  --nx-panel: rgba(17, 27, 52, .88);
+  --nx-border: rgba(105, 234, 255, .17);
+  --nx-blue: #69eaff;
+  --nx-text: #edf5ff;
+  --nx-muted: #9aacc8;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+}
+
+body {
+  box-sizing: border-box;
+  background:
+    radial-gradient(ellipse at 50% 0%, #142447 0%, transparent 55%),
+    var(--nx-bg) !important;
+  color: var(--nx-text);
+  min-height: 100vh;
+}
+
+body > header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  grid-column: 1 / -1;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 22px;
+  background: rgba(7, 11, 24, .92);
+  border-bottom: 1px solid var(--nx-border);
+  backdrop-filter: blur(18px);
+}
+
+body > header h1 {
+  color: var(--nx-blue);
+  letter-spacing: 2px;
+}
+
+#nexoraNavigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(11, 18, 36, .92);
+  border-bottom: 1px solid var(--nx-border);
+}
+
+#nexoraNavigation a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 9px 16px;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  color: var(--nx-muted);
+  text-decoration: none;
+  transition: .2s ease;
+}
+
+#nexoraNavigation a:hover,
+#nexoraNavigation a:focus-visible {
+  color: var(--nx-blue);
+  background: rgba(105, 234, 255, .09);
+  border-color: var(--nx-border);
+}
+
+body > section,
+body > footer {
+  box-sizing: border-box;
+  width: min(100% - 28px, 820px);
+  margin: 14px auto;
+}
+
+body > section.card,
+body > section.hero {
+  padding: 22px;
+  border: 1px solid var(--nx-border);
+  border-radius: 20px;
+  background: linear-gradient(145deg, var(--nx-panel), rgba(9, 15, 31, .94));
+  box-shadow: 0 12px 35px rgba(0, 0, 0, .2);
+  backdrop-filter: blur(14px);
+}
+
+body > section.hero {
+  text-align: center;
+  padding-top: 32px;
+  padding-bottom: 32px;
+  background:
+    radial-gradient(ellipse at top, rgba(38, 137, 194, .17), transparent 70%),
+    var(--nx-panel);
+}
+
+body > section h2 {
+  color: var(--nx-text);
+  line-height: 1.35;
+}
+
+body > section p,
+body > footer {
+  color: var(--nx-muted);
+  line-height: 1.7;
+}
+
+input,
+textarea,
+select {
+  box-sizing: border-box;
+  max-width: 100%;
+  border: 1px solid var(--nx-border) !important;
+  border-radius: 12px !important;
+  background: rgba(4, 9, 21, .75) !important;
+  color: var(--nx-text) !important;
+  padding: 12px !important;
+}
+
+textarea {
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+}
+
+button {
+  border-radius: 12px;
+  transition: transform .18s ease, filter .18s ease;
+}
+
+button:hover {
+  filter: brightness(1.12);
+}
+
+button:active {
+  transform: scale(.98);
+}
+
+#humanityMessages > *,
+#globalChatCard > *,
+#liveCallsCard > * {
+  max-width: 100%;
+}
+
+#humanityMessages article,
+#globalChatCard article,
+#globalChatCard .message,
+#humanityMessages .message {
+  overflow-wrap: anywhere;
+}
+
+body > footer {
+  text-align: center;
+  padding: 22px 12px;
+  border-top: 1px solid var(--nx-border);
+}
+
+/* Mobile-first responsive navigation */
+@media (max-width: 700px) {
+  html {
+    scroll-padding-bottom: 85px;
+  }
+
+  body {
+    padding-bottom: 78px;
+  }
+
+  body > header {
+    padding: 12px 14px;
+    text-align: center;
+  }
+
+  #nexoraNavigation {
+    position: fixed;
+    z-index: 999;
+    inset: auto 0 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 2px;
+    padding: 7px 4px calc(7px + env(safe-area-inset-bottom));
+    background: rgba(7, 11, 24, .97);
+    border-top: 1px solid var(--nx-border);
+    border-bottom: 0;
+    backdrop-filter: blur(20px);
+  }
+
+  #nexoraNavigation a {
+    min-width: 0;
+    min-height: 48px;
+    padding: 6px 2px;
+    font-size: 11px;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+
+  body > section,
+  body > footer {
+    width: calc(100% - 20px);
+    margin: 10px auto;
+  }
+
+  body > section.card,
+  body > section.hero {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  body > section.hero {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  input,
+  textarea,
+  select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  body > footer {
+    padding-bottom: 18px;
+  }
+}
+
+/* NEXORA — THREE COLUMN SOCIAL FEED */
+@media (min-width: 1000px) {
+  body {
+    display: grid;
+    grid-template-columns: minmax(210px, 250px) minmax(420px, 720px) minmax(220px, 280px);
+    grid-auto-flow: row;
+    align-items: start;
+    justify-content: center;
+    gap: 14px;
+    padding: 0 18px 30px;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  body > header,
+  #nexoraNavigation,
+  body > footer {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  body > header {
+    grid-row: 1;
+  }
+
+  #nexoraNavigation {
+    grid-row: 2;
+    position: sticky;
+    top: 65px;
+    z-index: 90;
+  }
+
+  body > section {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+  }
+
+  #homeSection {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  body > section.card:nth-of-type(2) {
+    grid-column: 2;
+    grid-row: 4;
+  }
+
+  #humanityMessages {
+    grid-column: 2;
+    grid-row: 5;
+  }
+
+  #globalChatCard {
+    grid-column: 2;
+    grid-row: 6;
+  }
+
+  #userAuthCard {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  #profileCard {
+    grid-column: 1;
+    grid-row: 4;
+  }
+
+  #passwordRecoveryCard {
+    grid-column: 1;
+    grid-row: 5;
+  }
+
+  #adminLoginCard {
+    grid-column: 3;
+    grid-row: 3;
+  }
+
+  #adminReportsCard {
+    grid-column: 3;
+    grid-row: 4;
+  }
+
+  #liveCallsCard {
+    grid-column: 3;
+    grid-row: 5;
+  }
+
+  body > footer {
+    grid-row: 20;
+  }
+}
+
+/* NEXORA — MOBILE SOCIAL FEED POLISH */
+@media (max-width: 700px) {
+  #globalChatCard {
+    overflow: hidden;
+  }
+
+  #globalChatCard h2,
+  #humanityMessages h2,
+  #liveCallsCard h2 {
+    font-size: 20px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+
+  #globalChatCard > p,
+  #humanityMessages > p,
+  #liveCallsCard > p {
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  #globalChatCard label,
+  #liveCallsCard label {
+    display: block;
+    margin: 14px 0 7px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  #globalChatCard input,
+  #globalChatCard textarea,
+  #liveCallsCard select {
+    box-sizing: border-box;
+    max-width: 100%;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  #globalChatCard textarea {
+    min-height: 105px;
+    resize: vertical;
+    line-height: 1.7;
+  }
+
+  #globalChatList {
+    margin-top: 18px;
+  }
+
+  #globalChatList .message {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 12px 0;
+    padding: 15px;
+    border-radius: 16px;
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+
+  #globalChatList .message strong {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  #globalChatList .message p {
+    font-size: 15px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+  }
+
+  #globalChatList .message button {
+    max-width: 100%;
+    min-height: 40px;
+    margin: 6px 4px 0 0;
+    padding: 9px 11px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .voice-chat-box {
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 18px;
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .voice-chat-box button,
+  #globalChatCard > button.full,
+  #liveCallsCard button.full {
+    box-sizing: border-box;
+    max-width: 100%;
+    min-height: 44px;
+    margin-top: 8px;
+  }
+
+  .voice-chat-box audio {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 12px;
+  }
+
+  #chatStatus,
+  #voiceStatus {
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  #humanityMessages article,
+  #humanityMessages .message,
+  #globalChatCard article,
+  #globalChatCard .message {
+    min-width: 0;
+    box-sizing: border-box;
+  }
+}
+
+/* NEXORA NEW VISUAL THEME */
+html { background: #070b18; }
+body {
+  background: radial-gradient(ellipse at top, #172c50 0%, #0a1020 48%, #070b18 100%) !important;
+  color: #f2f7ff !important;
+}
+header {
+  background: rgba(8,15,32,.97) !important;
+  border-bottom: 1px solid #23425f !important;
+  box-shadow: 0 8px 28px #0005;
+}
+header h1, .logo, .brand { color: #63e5ff !important; }
+.hero {
+  background: linear-gradient(135deg,#17365b,#111a32 65%,#102746) !important;
+  border: 1px solid #347ca0 !important;
+  border-radius: 24px !important;
+  box-shadow: 0 15px 38px #0005;
+  padding: 26px 18px !important;
+}
+.card, #globalChatCard, #profileCard, #accountCard {
+  background: linear-gradient(145deg,#15243e,#0d172b) !important;
+  border: 1px solid #29415e !important;
+  border-radius: 19px !important;
+  box-shadow: 0 10px 28px #0004;
+}
+input, textarea, select {
+  background: #080f20 !important;
+  color: #f2f7ff !important;
+  border: 1px solid #34516f !important;
+  border-radius: 12px !important;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: #63e5ff !important;
+  box-shadow: 0 0 0 3px #63e5ff20;
+  outline: none;
+}
+button.full, #globalChatCard > button.full {
+  background: linear-gradient(110deg,#087fbd,#456eff) !important;
+  color: white !important;
+  border: 1px solid #58b8e8 !important;
+  border-radius: 12px !important;
+}
+#nexoraNavigation {
+  background: #080e1df5 !important;
+  border-top: 1px solid #29415e !important;
+}
+.message, .message-card, .post, .chat-message {
+  background: #14213a !important;
+  border: 1px solid #29415e !important;
+  border-radius: 15px !important;
+}
+@media(max-width:700px) {
+  .hero { margin-top: 14px; }
+  .card, #globalChatCard { margin-bottom: 16px; }
+}
+
+/* NEXORA HOME — PREMIUM REDESIGN */
+#homeSection.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  text-align: center;
+  min-height: 390px;
+  margin: 24px auto;
+  padding: 42px 22px 36px !important;
+  border: 1px solid rgba(99, 229, 255, .48) !important;
+  border-radius: 28px !important;
+  background:
+    radial-gradient(ellipse at 50% 45%, rgba(23, 113, 172, .28), transparent 52%),
+    linear-gradient(145deg, #102b4b 0%, #101a35 52%, #0a1228 100%) !important;
+  box-shadow:
+    0 18px 48px rgba(0, 0, 0, .38),
+    inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+
+#homeSection.hero::before,
+#homeSection.hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  width: 240px;
+  height: 240px;
+  border: 1px solid rgba(99, 229, 255, .13);
+  border-radius: 50%;
+}
+
+#homeSection.hero::before {
+  top: -145px;
+  left: -90px;
+  box-shadow: 0 0 0 25px rgba(99, 229, 255, .025),
+              0 0 0 50px rgba(99, 229, 255, .02);
+}
+
+#homeSection.hero::after {
+  right: -130px;
+  bottom: -165px;
+  width: 290px;
+  height: 290px;
+  box-shadow: 0 0 0 25px rgba(99, 229, 255, .025);
+}
+
+#homeSection.hero h1 {
+  margin: 0 auto 18px;
+  font-size: clamp(34px, 7vw, 58px);
+  line-height: 1.18;
+  font-weight: 850;
+  letter-spacing: -1.4px;
+  color: #f4f9ff !important;
+  text-shadow: 0 5px 24px rgba(0, 0, 0, .25);
+}
+
+#homeSection.hero h1 .highlight {
+  display: inline-block;
+  margin-top: 8px;
+  color: #63e5ff !important;
+  text-shadow: 0 0 24px rgba(99, 229, 255, .2);
+}
+
+#homeSection.hero .description {
+  max-width: 610px;
+  margin: 0 auto 18px;
+  color: #c7d8ed !important;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+#homeSection.hero .earth {
+  display: block;
+  width: fit-content;
+  margin: 12px auto 18px;
+  font-size: 76px;
+  line-height: 1.25;
+  filter: drop-shadow(0 0 22px rgba(66, 194, 255, .35));
+  animation: nexoraHomeGlobe 5s ease-in-out infinite;
+}
+
+#homeSection.hero > .highlight {
+  display: inline-block;
+  margin: 2px auto 0;
+  padding: 10px 17px;
+  border: 1px solid rgba(99, 229, 255, .23);
+  border-radius: 30px;
+  background: rgba(5, 16, 36, .4);
+  color: #a8f1ff !important;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+#homeSection.hero + .card {
+  position: relative;
+  margin: 22px auto 28px;
+  padding: 25px !important;
+  border: 1px solid rgba(99, 229, 255, .28) !important;
+  border-radius: 22px !important;
+  background: linear-gradient(145deg, #142744, #0c172c) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .26);
+}
+
+#homeSection.hero + .card h2 {
+  margin-top: 0;
+  color: #78eaff !important;
+  font-size: clamp(22px, 4vw, 28px);
+}
+
+#homeSection.hero + .card label {
+  display: block;
+  margin: 16px 0 8px;
+  color: #dceaff;
+  font-weight: 650;
+}
+
+#homeSection.hero + .card input,
+#homeSection.hero + .card textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 13px 14px;
+  line-height: 1.6;
+}
+
+#homeSection.hero + .card textarea {
+  min-height: 115px;
+  resize: vertical;
+}
+
+#homeSection.hero + .card button {
+  min-height: 46px;
+  font-weight: 750;
+  transition: transform .18s ease, filter .18s ease;
+}
+
+#homeSection.hero + .card button:active {
+  transform: scale(.98);
+  filter: brightness(1.12);
+}
+
+@keyframes nexoraHomeGlobe {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-7px) rotate(3deg); }
+}
+
+@media (max-width: 700px) {
+  #homeSection.hero {
+    min-height: 0;
+    margin: 14px auto 20px;
+    padding: 32px 17px 28px !important;
+    border-radius: 23px !important;
+  }
+
+  #homeSection.hero h1 {
+    font-size: clamp(31px, 9vw, 43px);
+    letter-spacing: -.7px;
+  }
+
+  #homeSection.hero .description {
+    font-size: 14px;
+    line-height: 1.85;
+  }
+
+  #homeSection.hero .earth {
+    font-size: 66px;
+  }
+
+  #homeSection.hero + .card {
+    padding: 19px !important;
+    border-radius: 19px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #homeSection.hero .earth {
+    animation: none;
+  }
+}
+
+/* NEXORA ACCOUNT — SOCIAL PROFILE REDESIGN */
+#profileCard {
+  position: relative;
+  overflow: hidden;
+  padding: 22px !important;
+  isolation: isolate;
+}
+
+#profileCard::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 145px;
+  background: linear-gradient(
+    125deg,
+    #17365b 0%,
+    #17627b 52%,
+    #15243e 100%
+  );
+  border-bottom: 1px solid #347ca0;
+}
+
+#profileCard h2 {
+  position: relative;
+  margin: 105px 0 20px;
+  text-align: center;
+  font-size: clamp(21px, 5vw, 27px);
+  line-height: 1.5;
+}
+
+#profileCard > div {
+  position: relative;
+  margin: 0 auto 22px !important;
+}
+
+#profileAvatarPreview {
+  display: block;
+  width: 124px;
+  height: 124px;
+  max-width: 100%;
+  margin: 0 auto;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 5px solid #15243e !important;
+  outline: 2px solid #63e5ff;
+  background: #080f20;
+  box-shadow: 0 8px 24px #0006;
+}
+
+#profileCard label {
+  display: block;
+  margin: 17px 0 8px;
+  font-weight: 700;
+  color: #dcecff;
+}
+
+#profileCard input:not([type="file"]),
+#profileCard textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  line-height: 1.7;
+}
+
+#profileCard input[type="file"] {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px dashed #456b8c !important;
+  border-radius: 12px;
+}
+
+#profileCard textarea {
+  min-height: 105px;
+  resize: vertical;
+}
+
+#profileCard button {
+  margin-top: 18px;
+  min-height: 46px;
+  font-weight: 700;
+}
+
+#profileStatus {
+  margin-top: 16px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 480px) {
+  #profileCard {
+    padding: 17px !important;
+    border-radius: 18px !important;
+  }
+
+  #profileCard::before {
+    height: 125px;
+  }
+
+  #profileCard h2 {
+    margin-top: 91px;
+    font-size: 21px;
+  }
+
+  #profileAvatarPreview {
+    width: 112px;
+    height: 112px;
+  }
+}
+
+/* END NEXORA ACCOUNT REDESIGN */
