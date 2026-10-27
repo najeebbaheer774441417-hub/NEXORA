@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
+<script src="feed.js" defer></script>
 <script src="global-chat.js"></script>
 <script src="profile.js" defer></script>
 <script src="voice-chat.js" defer></script>
@@ -44,6 +45,28 @@
   <div class="earth">🌍</div>
 
   <p class="highlight">Every voice matters. Every message counts.</p>
+</section>
+
+<section class="card" id="nexoraFeedCard">
+  <h2>📰 NEXORA Feed</h2>
+  <p>Share your thoughts with the NEXORA community.</p>
+
+  <label for="nexoraPostContent">What's on your mind?</label>
+  <textarea id="nexoraPostContent" maxlength="2000"
+    placeholder="Write a post for your community..."></textarea>
+
+  <label for="nexoraPostImage">Image URL (optional)</label>
+  <input id="nexoraPostImage" type="url" maxlength="2000"
+    placeholder="https://example.com/image.jpg">
+
+  <button class="full" id="nexoraCreatePostButton" type="button">
+    📝 Create Post
+  </button>
+  <p id="nexoraPostStatus" aria-live="polite"></p>
+
+  <div id="nexoraPostsList" aria-live="polite">
+    <p>Posts will appear here after the feed is connected.</p>
+  </div>
 </section>
 
 <section class="card" id="shareMessageCard">
@@ -716,7 +739,7 @@ async function copyMessage() {
 
 
 const NEXORA_VIEW_GROUPS = {
-  home: ["homeSection", "shareMessageCard"],
+  home: ["homeSection", "nexoraFeedCard", "shareMessageCard"],
   messages: ["humanityMessages"],
   global: ["globalChatCard"],
   calls: ["liveCallsCard"],

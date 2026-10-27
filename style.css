@@ -1884,3 +1884,65 @@ body:not(.nexora-admin-active) #adminReportsCard {
   }
 }
 /* END NEXORA RESPONSIVE FIX */
+
+/* NEXORA FEED POST DESIGN */
+#nexoraFeedCard {
+  min-width: 0;
+}
+
+#nexoraPostsList {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.nexora-post {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--nx-border);
+  border-radius: 16px;
+  background: linear-gradient(145deg, var(--nx-panel), rgba(9, 15, 31, .94));
+  overflow-wrap: anywhere;
+}
+
+.nexora-post-meta {
+  margin: 0 0 12px;
+  color: var(--nx-muted);
+  font-size: .82rem;
+  line-height: 1.5;
+}
+
+.nexora-post-content {
+  margin: 0;
+  color: var(--nx-text);
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.nexora-post-image {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  max-height: 480px;
+  margin-top: 14px;
+  border: 1px solid var(--nx-border);
+  border-radius: 12px;
+  object-fit: contain;
+  background: rgba(0, 0, 0, .12);
+}
+
+.nexora-post button {
+  margin-top: 14px;
+}
+
+@media (max-width: 600px) {
+  .nexora-post {
+    padding: 13px;
+    border-radius: 13px;
+  }
+
+  .nexora-post-image {
+    max-height: 360px;
+  }
+}
