@@ -245,6 +245,7 @@ async function checkAdminAccess(user) {
 
   if (!user) {
     isNexoraAdmin = false;
+    document.body.classList.remove("nexora-admin-active");
     document.getElementById("adminReportsCard").hidden = true;
     loginCard.querySelectorAll("input, label, button").forEach(el => {
       if (el.id !== "adminLogoutButton") el.hidden = false;
@@ -262,6 +263,7 @@ async function checkAdminAccess(user) {
 
   if (error || !data) {
     isNexoraAdmin = false;
+    document.body.classList.remove("nexora-admin-active");
     document.getElementById("adminReportsCard").hidden = true;
     loginCard.querySelectorAll("input, label").forEach(el => el.hidden = false);
     loginCard.querySelector('button[onclick="adminLogin()"]').hidden = false;
@@ -271,6 +273,7 @@ async function checkAdminAccess(user) {
   }
 
   isNexoraAdmin = true;
+  document.body.classList.add("nexora-admin-active");
   document.getElementById("adminReportsCard").hidden = false;
   loginCard.querySelectorAll("input, label").forEach(el => el.hidden = true);
   loginCard.querySelector('button[onclick="adminLogin()"]').hidden = true;
@@ -774,11 +777,12 @@ const nexoraHashViews = {
   liveCallsCard: "calls",
   userAuthCard: "account"
 };
-setNexoraView(nexoraHashViews[nexoraInitialHash] || "home", false);
+setNexoraView("account", false);
 
 function updateUserAuthUI(session) {
   const signedIn = Boolean(session?.user);
   document.body.classList.toggle("nexora-dashboard-active", signedIn);
+  document.getElementById("nexoraNavigation").hidden = !signedIn;
   document.getElementById("userEmail").hidden = signedIn;
   document.getElementById("userPassword").hidden = signedIn;
   document.getElementById("signUpButton").hidden = signedIn;
@@ -790,7 +794,8 @@ function updateUserAuthUI(session) {
 window.supabaseClient.auth.onAuthStateChange((event, session) => {
   updateUserAuthUI(session);
   loadNexoraProfile(session?.user ?? null);
-  if (event === "SIGNED_IN") setNexoraView("home", false);
+  checkAdminAccess(session?.user ?? null);
+  setNexoraView(session?.user ? "home" : "account", false);
 
  if (event === "PASSWORD_RECOVERY") {
    const card = document.getElementById("passwordRecoveryCard");

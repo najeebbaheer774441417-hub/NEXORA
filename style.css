@@ -1741,3 +1741,24 @@ body.nexora-dashboard-active #signOutButton {
     overflow-wrap: normal;
   }
 }
+
+
+ /* NEXORA AUTH GATE: show the app only after sign-in */
+body:not(.nexora-dashboard-active) #nexoraNavigation,
+body:not(.nexora-dashboard-active) #homeSection,
+body:not(.nexora-dashboard-active) #shareMessageCard,
+body:not(.nexora-dashboard-active) #humanityMessages,
+body:not(.nexora-dashboard-active) #globalChatCard,
+body:not(.nexora-dashboard-active) #liveCallsCard,
+body:not(.nexora-dashboard-active) #profileCard,
+body:not(.nexora-dashboard-active) #adminLoginCard,
+body:not(.nexora-dashboard-active) #adminReportsCard,
+body:not(.nexora-dashboard-active) > footer {
+  display: none !important;
+}
+
+/* Admin controls stay hidden unless Supabase confirms admin membership. */
+body:not(.nexora-admin-active) #adminLoginCard,
+body:not(.nexora-admin-active) #adminReportsCard {
+  display: none !important;
+}
