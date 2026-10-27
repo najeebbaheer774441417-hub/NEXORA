@@ -1762,3 +1762,125 @@ body:not(.nexora-admin-active) #adminLoginCard,
 body:not(.nexora-admin-active) #adminReportsCard {
   display: none !important;
 }
+
+/* NEXORA RESPONSIVE FIX — 2026-10-27 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+@media (max-width: 700px) {
+  html {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  body {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: calc(92px + env(safe-area-inset-bottom));
+    overflow-x: clip;
+  }
+
+  body > header {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 12px 14px;
+  }
+
+  #nexoraNavigation {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 999;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 2px;
+    width: 100%;
+    max-width: 100%;
+    padding: 7px 4px calc(7px + env(safe-area-inset-bottom));
+  }
+
+  #nexoraNavigation a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    margin: 0;
+    padding: 6px 1px;
+    font-size: clamp(10px, 2.8vw, 12px);
+    line-height: 1.35;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  body > section,
+  body > footer,
+  body.nexora-dashboard-active > section.card,
+  body.nexora-dashboard-active > section.hero {
+    width: calc(100% - 16px);
+    max-width: 720px;
+    min-width: 0;
+    margin: 8px auto;
+  }
+
+  body > section.card,
+  body.nexora-dashboard-active > section.card {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  #homeSection.hero {
+    min-height: 0;
+    padding: 28px 16px !important;
+  }
+
+  #homeSection.hero h1 {
+    font-size: clamp(28px, 8vw, 42px);
+    overflow-wrap: anywhere;
+  }
+
+  input,
+  textarea,
+  select {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    font-size: 16px;
+  }
+
+  button,
+  body.nexora-dashboard-active > section.card button {
+    max-width: 100%;
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  img,
+  video,
+  audio,
+  canvas,
+  iframe {
+    max-width: 100%;
+  }
+
+  #humanityMessages,
+  #globalChatCard,
+  #liveCallsCard,
+  #profileCard {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+/* END NEXORA RESPONSIVE FIX */
